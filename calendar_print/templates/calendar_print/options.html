@@ -1,0 +1,10 @@
+{% extends 'calendar_print/base.html' %}
+
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+        {{ form.errors }}
+    </form>
+{% endblock %}
