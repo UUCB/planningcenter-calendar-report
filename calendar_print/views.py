@@ -32,7 +32,13 @@ class CalendarPrintView(FormView):
             'calendar_print/report.html',
             {
                 'header_text': form.cleaned_data['header_text'],
-                'days': [DayWithEvents(day) for day in daterange(form.cleaned_data['start_date'], form.cleaned_data['end_date'])],
+                'days': [
+                    DayWithEvents(day)
+                    for day in daterange(
+                        form.cleaned_data['start_date'],
+                        form.cleaned_data['end_date'] + timedelta(days=1)  # make the end of the range inclusive
+                    )
+                ],
             }
         )
 
