@@ -1,3 +1,41 @@
-{% for event in events %}
-    {{ event }}<br>
-{% endfor %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Planning Center Calendar Listing</title>
+    <link rel="stylesheet" href="{% static 'calendar_print/report_output.css' %}">
+    <style>
+        h3.header-medium {font-size: 160%;}
+        h2.header-large {font-size: 190%; padding: 1rem; border-radius: 0.5rem;}
+        h1.header-large {font-size: 220%;}
+    </style>
+  </head>
+  <body>
+    {% if header_text %}
+      <h1>{{ header_text }}</h1>
+    {% endif %}
+    {% for day in days %}
+      <h2>{{ day.date|date:"l, F jS" }}</h2>
+        {% if not day.events %}
+            <div class="soft pad-left gutter-bottom-medium">
+              No events today
+            </div>
+        {% endif %}
+            <ul>
+              {% for event in day.events %}
+                <li>
+                  <h3>
+                    {% if event.all_day %}
+                        All-day
+                    {% else %}
+                        {{ event.start_time|date:"fA"|lower }} - {{ event.end_time|date:"fA"|lower }}
+                    {% endif %}
+                        :&nbsp;
+                    {{ event.name }}
+                  </h3>
+                </li>
+              {% endfor %}
+            </ul>
+      {% endfor %}
+  </body>
+</html>
