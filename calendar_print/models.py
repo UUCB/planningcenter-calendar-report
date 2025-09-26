@@ -14,6 +14,7 @@ class Event(models.Model):
     end_time = models.DateTimeField()
     description = models.TextField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
+    all_day = models.BooleanField(default=False)
 
     def readable_times(self):
         return {

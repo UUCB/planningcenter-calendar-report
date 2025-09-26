@@ -25,8 +25,6 @@ def get_events(until) -> list:
         filter='future',
     )
     for event_instance in upcoming_event_instances:
-        if event_instance['data']['attributes']['all_day_event']:
-            continue  # Ignore all day events for now, as we currently have no good way to display them
         if not event_instance['data']['attributes']['published_starts_at']:
             continue  # Ignore anything that doesn't have a start time; these events will break things
         if parse_datetime(event_instance['data']['attributes']['published_starts_at']).date() > until:
@@ -58,6 +56,7 @@ def get_events(until) -> list:
                 ).date(),
                 link=f'https://uucb.churchcenter.com/calendar/event/{event_instance['data']["id"]}',
                 description=event['data']['attributes']['description'],
+                all_day=event_instance['data']['attributes']['all_day_event'],
                 # Add the other fields
                 # Write the actual update function like we have in voting system
             ))
@@ -81,6 +80,7 @@ def update_events(events: list) -> None:
         event_object.link = new_event.link
         event_object.description = new_event.description
         event_object.date = new_event.date
+        event_object.all_day = new_event.all_day
         event_object.save()
     for event in Event.objects.filter(just_imported=False):
         event.delete()
