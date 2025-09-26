@@ -15,27 +15,24 @@
       <h1>{{ header_text }}</h1>
     {% endif %}
     {% for day in days %}
-      <h2>{{ day.date|date:"l, F jS" }}</h2>
-        {% if not day.events %}
-            <div class="soft pad-left gutter-bottom-medium">
-              No events today
-            </div>
-        {% endif %}
+        <div class="day">
+            <h2>{{ day.date|date:"l, F jS" }}</h2>
+            {% if not day.events %}
+                <div class="soft pad-left gutter-bottom-medium">
+                  No events today
+                </div>
+            {% endif %}
             <ul>
               {% for event in day.events %}
                 <li>
-                  <h3>
-                    {% if event.all_day %}
-                        All-day
-                    {% else %}
-                        {{ event.start_time|date:"fA"|lower }} - {{ event.end_time|date:"fA"|lower }}
-                    {% endif %}
-                        :&nbsp;
+                    <span class="event-time">
+                        {% if event.all_day %}All-day{% else %}{{ event.start_time|date:"fA"|lower }} - {{ event.end_time|date:"fA"|lower }}{% endif %}:&nbsp;
+                    </span>
                     {{ event.name }}
-                  </h3>
                 </li>
               {% endfor %}
             </ul>
+        </div>
       {% endfor %}
   </body>
 </html>
