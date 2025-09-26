@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from os import environ as env
+
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%a=87t5z@2w*_)!h4n0#&$)bup+gk0a-b75-5-mw(1^)*!wr8^'
+SECRET_KEY = env.get('SECRET_KEY', 'please-set-a-secret-key')
+DEBUG = {'True': True, 'False': False}[env.get('DEBUG', False)]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if SECRET_KEY == 'please-set-a-secret-key' and not DEBUG:
+    raise ImproperlyConfigured('SECRET_KEY must be set in order to use this app in production.')
+
+PLANNING_CENTER_APPLICATION_ID = env.get('PLANNING_CENTER_APPLICATION_ID')
+PLANNING_CENTER_SECRET = env.get('PLANNING_CENTER_SECRET')
+
+if not PLANNING_CENTER_APPLICATION_ID or not PLANNING_CENTER_SECRET:
+    raise ImproperlyConfigured('PLANNING_CENTER_APPLICATION_ID and PLANNING_CENTER_SECRET must be set in order to use this app.')
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'calendar_print'
 ]
 
 MIDDLEWARE = [
@@ -75,7 +86,7 @@ WSGI_APPLICATION = 'planningcenter_calendar_report.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': env.get('DB_PATH', BASE_DIR / 'db.sqlite3'),
     }
 }
 
