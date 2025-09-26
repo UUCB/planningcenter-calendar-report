@@ -18,39 +18,40 @@ def get_pco():
 def get_events(until) -> list:
     pco = get_pco()
     output_events = []
-    upcoming_event_instances = pco.get(
+    upcoming_event_instances = pco.iterate(
         '/calendar/v2/event_instances',
         order='starts_at',
         include='event',
         filter='future',
     )
-    for event_instance in upcoming_event_instances["data"]:
-        if event_instance['attributes']['all_day_event']:
+    for event_instance in upcoming_event_instances:
+        if event_instance['data']['attributes']['all_day_event']:
             continue  # Ignore all day events for now, as we currently have no good way to display them
-        if parse_datetime(event_instance['attributes']['published_starts_at']).date() > until:
-            output_events.append(event_instance)
+        if not event_instance['data']['attributes']['published_starts_at']:
+            continue  # Ignore anything that doesn't have a start time; these events will break things
+        if parse_datetime(event_instance['data']['attributes']['published_starts_at']).date() > until:
             break  # Break out of the loop if we have enough events
         event = pco.get(
-            event_instance['relationships']['event']['links']['related']
+            event_instance['data']['relationships']['event']['links']['related']
         )
         if event['data']['attributes']['visible_in_church_center']\
-                and event_instance['attributes']['published_starts_at']\
-                and event_instance['attributes']['published_ends_at']:
+                and event_instance['data']['attributes']['published_starts_at']\
+                and event_instance['data']['attributes']['published_ends_at']:
             output_events.append(Event(
-                planning_center_instance_id=event_instance['id'],
+                planning_center_instance_id=event_instance['data']['id'],
                 planning_center_event_id=event['data']['id'],
                 name=event['data']['attributes']['name'],
                 start_time=timezone.localtime(
                     parse_datetime(
-                        event_instance['attributes']['published_starts_at']
+                        event_instance['data']['attributes']['published_starts_at']
                     )
                 ),
                 end_time=timezone.localtime(
                     parse_datetime(
-                        event_instance['attributes']['published_ends_at']
+                        event_instance['data']['attributes']['published_ends_at']
                     )
                 ),
-                link=f'https://uucb.churchcenter.com/calendar/event/{event_instance["id"]}',
+                link=f'https://uucb.churchcenter.com/calendar/event/{event_instance['data']["id"]}',
                 description=event['data']['attributes']['description'],
                 # Add the other fields
                 # Write the actual update function like we have in voting system
