@@ -13,6 +13,7 @@ class Event(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     description = models.TextField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
 
     def readable_times(self):
         return {

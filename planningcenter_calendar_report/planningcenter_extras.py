@@ -51,6 +51,11 @@ def get_events(until) -> list:
                         event_instance['data']['attributes']['published_ends_at']
                     )
                 ),
+                date=timezone.localtime(
+                    parse_datetime(
+                        event_instance['data']['attributes']['published_starts_at']
+                    )
+                ).date(),
                 link=f'https://uucb.churchcenter.com/calendar/event/{event_instance['data']["id"]}',
                 description=event['data']['attributes']['description'],
                 # Add the other fields
@@ -75,6 +80,7 @@ def update_events(events: list) -> None:
         event_object.end_time = new_event.end_time
         event_object.link = new_event.link
         event_object.description = new_event.description
+        event_object.date = new_event.date
         event_object.save()
     for event in Event.objects.filter(just_imported=False):
         event.delete()
