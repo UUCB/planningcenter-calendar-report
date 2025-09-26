@@ -10,8 +10,8 @@ class CalendarPrintView(FormView):
     form_class = CalendarPrintForm
 
     def form_valid(self, form):
-        print('VALID')
-        planningcenter_extras.update_events(planningcenter_extras.get_events(until=form.cleaned_data['end_date']))
+        if form.cleaned_data['refresh']:
+            planningcenter_extras.update_events(planningcenter_extras.get_events(until=form.cleaned_data['end_date']))
         return render(
             self.request,
             'calendar_print/report.html',
