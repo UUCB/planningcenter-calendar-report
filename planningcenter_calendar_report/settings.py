@@ -36,6 +36,7 @@ if not PLANNING_CENTER_APPLICATION_ID or not PLANNING_CENTER_SECRET:
     raise ImproperlyConfigured('PLANNING_CENTER_APPLICATION_ID and PLANNING_CENTER_SECRET must be set in order to use this app.')
 
 ALLOWED_HOSTS = [host for host in env.get('ALLOWED_HOSTS', 'localhost').split(',')]
+CSRF_TRUSTED_ORIGINS = ['https://' + host for host in ALLOWED_HOSTS]
 
 # Application definition
 
