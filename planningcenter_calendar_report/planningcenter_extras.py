@@ -16,7 +16,10 @@ def get_pco():
 
 
 def get_events(until) -> list:
+    print('getting events')
     pco = get_pco()
+    print(pco)
+    events = []
     output_events = []
     upcoming_event_instances = pco.iterate(
         '/calendar/v2/event_instances',
@@ -25,6 +28,7 @@ def get_events(until) -> list:
         filter='future',
     )
     for event_instance in upcoming_event_instances:
+        print('event_instance', event_instance)
         if not event_instance['data']['attributes']['published_starts_at']:
             continue  # Ignore anything that doesn't have a start time; these events will break things
         if parse_datetime(event_instance['data']['attributes']['published_starts_at']).date() > until:
