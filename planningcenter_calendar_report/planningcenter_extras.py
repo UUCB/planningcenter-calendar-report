@@ -42,7 +42,7 @@ def get_events(until) -> list:
             output_events.append(Event(
                 planning_center_instance_id=event_instance['data']['id'],
                 planning_center_event_id=event['data']['id'],
-                name=event['data']['attributes']['name'],
+                name=event_instance['data']['attributes']['name'],
                 start_time=timezone.localtime(
                     parse_datetime(
                         event_instance['data']['attributes']['published_starts_at']
