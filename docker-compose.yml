@@ -1,0 +1,15 @@
+services:
+  planningcenter_calendar_report:
+    image: sheepman4267/planningcenter_calendar_report:v0.1
+    volumes:
+      - "./planningcenter_calendar_report_db:/db"
+    environment:
+      - SECRET_KEY=set-a-secret-key-please
+      - ALLOWED_HOSTS=localhost
+      - DB_PATH=/db/db.sqlite3
+      - DEBUG=True
+      - PLANNING_CENTER_APPLICATION_ID=e1fa06f53152850da162d46860007632d60d7fd383bad37a7a2bd3d07a499704
+      - PLANNING_CENTER_SECRET=30e17daee1e3eed4e6623f5653fd0ba44dbdc2481cc58edcab5e6c915daac556
+      - PYTHONUNBUFFERED=1
+    ports:
+      - 8010:8000

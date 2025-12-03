@@ -31,6 +31,7 @@ class CalendarPrintView(FormView):
             self.request,
             'calendar_print/report.html',
             {
+                'page_per_day': form.cleaned_data['page_per_day'],
                 'header_text': form.cleaned_data['header_text'],
                 'days': [
                     DayWithEvents(day)

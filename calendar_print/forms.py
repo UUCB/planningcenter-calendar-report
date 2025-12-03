@@ -14,4 +14,5 @@ class CalendarPrintForm(Form):
     start_date = DateField(widget=DateInput(attrs={'type': 'date'}), initial=get_sunday)
     end_date = DateField(widget=DateInput(attrs={'type': 'date'}), initial=get_following_sunday)
     header_text = CharField(required=False, initial="Events This Week")
+    page_per_day = BooleanField(initial=False, required=False)
     refresh = BooleanField(initial=True, required=False)
